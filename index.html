@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Student Leave Application Form</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#eef2f7;
+    padding:20px;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+h1,h2{
+    text-align:center;
+    margin:5px 0;
+}
+h1{font-size:22px;}
+h2{font-size:16px;color:#555;}
+
+.search-box{
+    display:flex;
+    gap:10px;
+    margin:20px 0;
+    flex-wrap:wrap;
+}
+.search-box input{
+    flex:1;
+    padding:10px;
+    font-size:16px;
+}
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:15px;
+}
+.search{background:#007bff;color:#fff;}
+.new{background:#6c757d;color:#fff;}
+.pdf{background:#28a745;color:#fff;}
+
+.form-section{
+    display:none;
+    margin-top:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+.field{
+    background:#f4f6f8;
+    padding:8px;
+    border-radius:5px;
+    font-size:14px;
+}
+.field b{color:#333;}
+
+.full{
+    grid-column:1/3;
+}
+
+.sign{
+    display:flex;
+    justify-content:space-between;
+    margin-top:50px;
+    text-align:center;
+}
+.sign div{
+    width:30%;
+    border-top:1px solid #000;
+    padding-top:5px;
+    font-weight:bold;
+}
+
+@media print{
+    body{background:none;padding:0;}
+    .search-box,button{display:none;}
+    .container{box-shadow:none;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="printArea">
+
+<h1>BUKHARIYA EDUCATIONAL CENTRE</h1>
+<h2>BOVIKKANAM, MUTALAPPARA, PO MULIYAR, KASARAGOD</h2>
+<h2>STUDENT LEAVE APPLICATION FORM</h2>
+
+<div class="search-box">
+    <input type="text" id="reg" placeholder="Enter Admission / Registration No">
+    <button class="search" onclick="searchData()">Search</button>
+    <button class="new" onclick="location.reload()">New Search</button>
+    <button class="pdf" onclick="window.print()">Download PDF</button>
+</div>
+
+<div class="form-section" id="form">
+
+<div class="grid">
+    <div class="field"><b>Admission No:</b> <span id="a"></span></div>
+    <div class="field"><b>Student Name:</b> <span id="b"></span></div>
+
+    <div class="field"><b>Parent / Guardian:</b> <span id="c"></span></div>
+    <div class="field"><b>Class & Section:</b> <span id="d"></span></div>
+
+    <div class="field"><b>Class Teacher:</b> <span id="e"></span></div>
+    <div class="field"><b>Department:</b> <span id="f"></span></div>
+
+    <div class="field"><b>Month:</b> <span id="g"></span></div>
+    <div class="field"><b>Reason for Leave:</b> <span id="h"></span></div>
+
+    <div class="field"><b>Date & Time of Leave:</b> <span id="i"></span></div>
+    <div class="field"><b>Date & Time of Return:</b> <span id="j"></span></div>
+
+    <div class="field"><b>Total Leave Days Requested:</b> <span id="k"></span></div>
+    <div class="field"><b>Leave Days Availed:</b> <span id="l"></span></div>
+
+    <div class="field"><b>Leave Days Remaining:</b> <span id="m"></span></div>
+    <div class="field"><b>Remarks:</b> <span id="n"></span></div>
+
+    <div class="field full"><b>Principal’s Approval:</b> <span id="o"></span></div>
+</div>
+
+<div class="sign">
+    <div>Parent / Guardian’s Signature</div>
+    <div>Class Teacher’s Signature</div>
+    <div>Principal / Headmaster’s Signature</div>
+</div>
+
+</div>
+</div>
+
+<script>
+const sheetURL="https://docs.google.com/spreadsheets/d/e/2PACX-1vSVfPvSFEF9leESM8EIJtk_Iyil-VNKWxbADeC0OSCkw637v1MRlguPv1nWbOxlock-ydU5LlMHn6vW/pub?gid=0&single=true&output=tsv";
+
+async function searchData(){
+    const reg=document.getElementById("reg").value.trim();
+    if(!reg){alert("Admission Number നൽകുക");return;}
+
+    const res=await fetch(sheetURL);
+    const txt=await res.text();
+    const rows=txt.split("\n").map(r=>r.split("\t"));
+
+    for(let i=1;i<rows.length;i++){
+        if(rows[i][0]==reg){
+            document.getElementById("a").innerText=rows[i][0];
+            document.getElementById("b").innerText=rows[i][1];
+            document.getElementById("c").innerText=rows[i][2];
+            document.getElementById("d").innerText=rows[i][3];
+            document.getElementById("e").innerText=rows[i][4];
+            document.getElementById("f").innerText=rows[i][5];
+            document.getElementById("g").innerText=rows[i][6];
+            document.getElementById("h").innerText=rows[i][7];
+            document.getElementById("i").innerText=rows[i][8];
+            document.getElementById("j").innerText=rows[i][9];
+            document.getElementById("k").innerText=rows[i][10];
+            document.getElementById("l").innerText=rows[i][11];
+            document.getElementById("m").innerText=rows[i][12];
+            document.getElementById("n").innerText=rows[i][13];
+            document.getElementById("o").innerText=rows[i][14];
+
+            document.getElementById("form").style.display="block";
+            return;
+        }
+    }
+    alert("Record കണ്ടെത്തിയില്ല");
+}
+</script>
+
+</body>
+</html>
